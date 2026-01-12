@@ -5,9 +5,6 @@ import ProductDetailPage from '@/pages/products/ProductDetail';
 
 
 
-// import LoginPage from '@/pages/auth/LoginPage';
-// import RegisterPage from '@/pages/auth/RegisterPage';
-
 export default function AppRoute() {
   return (
     <Routes>
@@ -23,11 +20,6 @@ export default function AppRoute() {
       {/* Search Results */}
       <Route path="/search" element={<ProductPage />} />
 
-     
-      
-      {/* Auth - TODO: Implement auth pages */}
-      {/* <Route path="/login" element={<LoginPage />} /> */}
-      {/* <Route path="/register" element={<RegisterPage />} /> */}
       
       {/* 404 - TODO: Create NotFoundPage */}
       <Route path="*" element={<HomePage />} />

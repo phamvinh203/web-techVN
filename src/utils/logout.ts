@@ -1,8 +1,14 @@
-import { TokenManager } from "./tokenManager"
+import { TokenManager } from "./tokenManager";
 
 const logout = () => {
-    TokenManager.clearTokens();
-    window.location.href = "/login";
+  // Xóa tokens
+  TokenManager.clearTokens();
+
+  // Xóa user info
+  localStorage.removeItem("user");
+
+  // Reload trang
+  window.location.href = "/";
 };
 
 export default logout;
