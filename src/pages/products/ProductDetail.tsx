@@ -35,11 +35,12 @@ export default function ProductDetailPage() {
         if (response.data._id) {
           try {
             const relatedResponse = await getRelatedProducts(response.data._id);
-            setRelatedProducts(relatedResponse.data.products || []);
+            setRelatedProducts(relatedResponse.data || []);
           } catch {
             console.log('No related products found');
           }
         }
+        
       } catch (err) {
         setError('Không thể tải thông tin sản phẩm');
         console.error('Error fetching product:', err);
@@ -106,11 +107,11 @@ export default function ProductDetailPage() {
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
           <Link to="/" className="hover:text-blue-600">Trang chủ</Link>
           <span>/</span>
-          <Link to={`/category/${product.category_id.slug}`} className="hover:text-blue-600">
+          <Link to={`/products?category=${product.category_id.slug}`} className="hover:text-blue-600">
             {product.category_id.name}
           </Link>
           <span>/</span>
-          <Link to={`/brand/${product.brand_id.slug}`} className="hover:text-blue-600">
+          <Link to={`/products?brand=${product.brand_id.slug}`} className="hover:text-blue-600">
             {product.brand_id.name}
           </Link>
           <span>/</span>
@@ -232,14 +233,41 @@ export default function ProductDetailPage() {
                 </Button>
               </div>
 
-              {/* Specifications Summary */}
-              <ProductSpecificationSection specification={product.specification} />
+              
             </div>
           </div>
         </div>
 
-        {/* Description Section */}
-        <ProductDescription description={product.description} />
+        {/* Product Detail Content */}
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+
+          <aside className="lg:col-span-2">
+            <div className="bg-white rounded-lg shadow-sm p-6 ">
+              <h2 className="text-xl font-bold text-blue-600 mb-4">
+                Mô tả sản phẩm
+              </h2>
+
+              <ProductDescription description={product.description} />
+              
+            </div>
+          </aside>
+
+          <section className="lg:col-span-1">
+            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+              <h2 className="text-xl font-bold text-blue-600 mb-4">
+                Thông số kỹ thuật
+              </h2>
+
+              <ProductSpecificationSection
+                specification={product.specification}
+              />
+            </div>
+          </section>
+
+        </div>
+
+
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (

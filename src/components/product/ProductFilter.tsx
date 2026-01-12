@@ -15,6 +15,7 @@ interface ProductFilterProps {
   currentCategorySlug?: string;
 }
 
+
 // Khoảng giá cố định
 const PRICE_RANGES = [
   { label: "Dưới 10 triệu", min: 0, max: 10000000 },
@@ -48,19 +49,19 @@ export default function ProductFilter({
     pageType === "category" ? currentCategorySlug || null : null
   );
 
-  // Sync selected state khi route thay đổi
-  useEffect(() => {
-    if (pageType === "brand") {
-      setSelectedBrand(currentBrandSlug || null);
-      setSelectedCategory(null);
-    } else if (pageType === "category") {
-      setSelectedCategory(currentCategorySlug || null);
-      setSelectedBrand(null);
-    } else {
-      setSelectedBrand(null);
-      setSelectedCategory(null);
-    }
-  }, [pageType, currentBrandSlug, currentCategorySlug]);
+  // // Sync selected state khi route thay đổi
+  // useEffect(() => {
+  //   if (pageType === "brand") {
+  //     setSelectedBrand(currentBrandSlug || null);
+  //     setSelectedCategory(null);
+  //   } else if (pageType === "category") {
+  //     setSelectedCategory(currentCategorySlug || null);
+  //     setSelectedBrand(null);
+  //   } else {
+  //     setSelectedBrand(null);
+  //     setSelectedCategory(null);
+  //   }
+  // }, [pageType, currentBrandSlug, currentCategorySlug]);
 
   useEffect(() => {
     const fetchData = async () => {

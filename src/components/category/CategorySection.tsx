@@ -65,7 +65,7 @@ export default function CategorySection({ className = '' }: CategorySectionProps
         {categories.map((category) => (
           <Link
             key={category._id}
-            to={`/category/${category.slug}`}
+            to={`/products?category=${category.slug}`}
             className="group relative overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer block"
           >
             <img

@@ -54,7 +54,7 @@ const FeaturedBrands: React.FC = () => {
                     {brands.map((brand) => (
                         <Link
                             key={brand._id}
-                            to={`/brand/${brand.slug}`}
+                            to={`/products?brand=${brand.slug}`}
                             className="flex items-center justify-center p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-md transition-all duration-200 group"
                         >
                             <img

@@ -97,7 +97,7 @@ export default function ListProduct() {
                   
                   {hasMore && (
                     <Link
-                      to={`/brand/${brand.slug}`}
+                      to={`/products?brand=${brand.slug}`}
                       className="group flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
                     >
                       Xem thêm 

@@ -21,7 +21,7 @@ export default function Header() {
             <Search size={18} className="text-gray-400" />
             <input
               type="text"
-              placeholder="Tìm kiếm điện thoại, laptop, phụ kiện..."
+              placeholder="Tìm kiếm laptop, phụ kiện..."
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
             />
             <button className="rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700">

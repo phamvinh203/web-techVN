@@ -17,12 +17,6 @@ export default function AppRoute() {
       {/* All Products */}
       <Route path="/products" element={<ProductPage />} />
 
-      {/* Products by Category */}
-      <Route path="/category/:slug" element={<ProductPage />} />
-
-      {/* Products by Brand */}
-      <Route path="/brand/:slug" element={<ProductPage />} />
-
       {/* Product Detail */}
       <Route path="/product/:slug" element={<ProductDetailPage />} />
 

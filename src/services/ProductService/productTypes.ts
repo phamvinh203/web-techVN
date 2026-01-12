@@ -3,7 +3,6 @@ export interface ProductBrand {
     _id: string;
     name: string;
     slug: string;
-    logo?: string;
 }
 
 export interface ProductCategory {
@@ -18,12 +17,18 @@ export interface BaseProduct {
     name: string;
     slug: string;
     price: number;
-    thumbnail: string;           // Ảnh đại diện
+    thumbnail: string;           
     status: string;
     brand_id: ProductBrand;
     category_id: ProductCategory;
     createdAt: string;
     updatedAt: string;
+    discount?: number;
+}
+
+export interface RelatedProductsResponse {
+    message: string;
+    data: ProductData[];
 }
 
 // ===== Full Product Data - Chi tiết đầy đủ =====
@@ -43,6 +48,7 @@ export interface SearchProduct {
     name: string;
     slug: string;
     price: number;
+    thumbnail: string;
     oldprice: number;
     images: string[];
     description: string;
@@ -55,6 +61,7 @@ export interface SearchProduct {
     deleted: boolean;
     createdAt: string;
     updatedAt: string;
+    discount?: number;
     __v?: number;
 }
 

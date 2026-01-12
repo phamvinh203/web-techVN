@@ -14,9 +14,13 @@ import { useProductList } from "@/hooks/useProductslist";
 import { useProductSort } from "@/hooks/useProductSort";
 
 export default function ProductPage() {
-  const { pageType, slug, searchQuery, pageTitle, breadcrumbLabel } = usePageType();
+  // ===== Page context (from query param) =====
+  const { pageType, slug, searchQuery, pageTitle } = usePageType();
 
+  // ===== Sort =====
   const { sort, setSort } = useProductSort("best_seller");
+
+  // ===== Product list =====
   const {
     products,
     pagination,
@@ -27,7 +31,6 @@ export default function ProductPage() {
     setPage,
     setFilters,
     clearFilters,
-
     categoryInfo,
     brandInfo,
   } = useProductList({
@@ -37,6 +40,7 @@ export default function ProductPage() {
     limit: 9,
   });
 
+  // ===== View mode =====
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   return (
@@ -58,11 +62,9 @@ export default function ProductPage() {
             <>
               <span>›</span>
               <span className="text-foreground font-medium">
-                {pageType === "category" && categoryInfo
-                  ? categoryInfo.name
-                  : pageType === "brand" && brandInfo
-                  ? brandInfo.name
-                  : breadcrumbLabel}
+                {pageType === "category" && categoryInfo?.name}
+                {pageType === "brand" && brandInfo?.name}
+                {pageType === "search" && `Tìm kiếm: "${searchQuery}"`}
               </span>
             </>
           )}
@@ -70,11 +72,10 @@ export default function ProductPage() {
 
         {/* ===== Page Title ===== */}
         <h1 className="text-2xl font-bold mb-6">
-          {pageType === "category" && categoryInfo
-            ? categoryInfo.name
-            : pageType === "brand" && brandInfo
-            ? brandInfo.name
-            : pageTitle}
+          {pageType === "category" && categoryInfo?.name}
+          {pageType === "brand" && brandInfo?.name}
+          {pageType === "search" && pageTitle}
+          {pageType === "all" && pageTitle}
         </h1>
 
         {/* ===== Error ===== */}
@@ -99,13 +100,13 @@ export default function ProductPage() {
 
           {/* ===== Main Content ===== */}
           <main className="flex-1">
-            {/* Toolbar */}
+            {/* ===== Toolbar ===== */}
             <div className="flex items-center justify-between mb-6 bg-gray-50 rounded-lg p-4">
               <span className="text-sm text-muted-foreground">
                 <strong className="text-foreground">
                   {pagination?.totalItems || 0}
                 </strong>{" "}
-                sáº£n pháº©m
+                sản phẩm
               </span>
 
               <div className="flex items-center gap-4">
@@ -119,7 +120,7 @@ export default function ProductPage() {
                     size="icon"
                     className="rounded-none h-9 w-9"
                     onClick={() => setViewMode("grid")}
-                    aria-label="Hiá»ƒn thá»‹ dáº¡ng lÆ°á»›i"
+                    aria-label="Hiển thị dạng lưới"
                   >
                     <LayoutGrid className="h-4 w-4" />
                   </Button>
@@ -129,7 +130,7 @@ export default function ProductPage() {
                     size="icon"
                     className="rounded-none h-9 w-9"
                     onClick={() => setViewMode("list")}
-                    aria-label="Hiá»ƒn thá»‹ dáº¡ng danh sÃ¡ch"
+                    aria-label="Hiển thị dạng danh sách"
                   >
                     <List className="h-4 w-4" />
                   </Button>
@@ -137,14 +138,14 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Product List */}
+            {/* ===== Product List ===== */}
             <ProductGrid
               products={products}
               loading={loading}
               viewMode={viewMode}
             />
 
-            {/* Pagination */}
+            {/* ===== Pagination ===== */}
             {pagination && pagination.totalPages > 1 && (
               <div className="mt-8">
                 <Pagination

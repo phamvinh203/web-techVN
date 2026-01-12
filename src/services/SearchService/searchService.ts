@@ -20,6 +20,17 @@ export const searchProducts = async (params: SearchParams): Promise<ProductListR
   return response.data;
 };
 
+// Lấy gợi ý tìm kiếm
+export const getSearchSuggestions = async (params: SuggestionParams): Promise<SuggestionResponse> => {
+  const { keyword, limit = 5 } = params;
+
+  const response = await api.get(`/search/suggestions`, {
+    params: { keyword, limit }
+  });
+
+  return response.data;
+};
+
 // Lọc sản phẩm theo brand/category slug và price
 export const filterProducts = async (params: FilterParams): Promise<ProductListResponse> => {
   const response = await api.get(`/search/filter`, {
@@ -49,23 +60,14 @@ export const getTopSellingProducts = async (page = 1, limit = 10): Promise<Produ
   return response.data;
 };
 
-// Lấy gợi ý tìm kiếm
-export const getSearchSuggestions = async (params: SuggestionParams): Promise<SuggestionResponse> => {
-  const { keyword, limit = 5 } = params;
 
-  const response = await api.get(`/search/suggestions`, {
-    params: { keyword, limit }
-  });
-
-  return response.data;
-};
 
 // Kết hợp search + filter + sort (dùng cho trang /products)
-export const advancedSearch = async (params: FilterParams & { sort?: string }): Promise<ProductListResponse> => {
-  const response = await api.get(`/search/filter`, {
-    params
-  });
+// export const advancedSearch = async (params: FilterParams & { sort?: string }): Promise<ProductListResponse> => {
+//   const response = await api.get(`/search/filter`, {
+//     params
+//   });
 
-  return response.data;
-};
+//   return response.data;
+// };
 

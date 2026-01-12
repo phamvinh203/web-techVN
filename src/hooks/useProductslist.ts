@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-import { advancedSearch } from "@/services/SearchService/searchService";
+import { filterProducts } from "@/services/SearchService/searchService";
 import { getCategoryBySlug } from "@/services/CategoryService/categoryService";
 
 import type { FilterParams, SortOption } from "@/services/SearchService/searchTypes";
@@ -74,7 +74,7 @@ export function useProductList({
         if (pageType === "category" && slug) params.category = slug;
         if (pageType === "search" && searchQuery) params.keyword = searchQuery;
 
-        const res = await advancedSearch(params);
+        const res = await filterProducts(params);
 
         setProducts(res.data.products);
         setPagination(res.data.pagination);
@@ -89,7 +89,7 @@ export function useProductList({
           } : null);
         }
       } catch {
-        setError("KhÃ´ng thá»ƒ táº£i sáº£n pháº©m");
+        setError('Đã có lỗi xảy ra khi tải sản phẩm.');
         setProducts([]);
         setPagination(null);
       } finally {
@@ -153,9 +153,9 @@ export function useProductList({
     }
   });
 
-  newParams.set("page", "1");
-  setSearchParams(newParams);
-};
+        newParams.set("page", "1");
+        setSearchParams(newParams);
+    };
 
 
   const clearFilters = () => {

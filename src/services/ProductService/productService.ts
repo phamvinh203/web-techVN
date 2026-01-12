@@ -1,5 +1,5 @@
 import api from "@/config/api"
-import type { ProductResponse } from "./productTypes";
+import type { ProductResponse, RelatedProductsResponse } from "./productTypes";
 import type { ProductDetailResponse } from "./productDetailTypes";
 
 // lấy tất cả sản phẩm
@@ -25,9 +25,12 @@ export const getTopSellingProducts = async (): Promise<ProductResponse> => {
     return response.data;
 }
 
+// Response type cho related products
+
+
 // sản phẩm liên quan /:id/related
-export const getRelatedProducts = async (productId: string): Promise<ProductResponse> => {
-    const response = await api.get<ProductResponse>(`/products/${productId}/related`);
+export const getRelatedProducts = async (productId: string): Promise<RelatedProductsResponse> => {
+    const response = await api.get<RelatedProductsResponse>(`/products/${productId}/related`);
     return response.data;
 }
 
