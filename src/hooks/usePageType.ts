@@ -15,9 +15,9 @@ export function usePageType(): UsePageTypeReturn {
 
   const brand = searchParams.get("brand") || undefined;
   const category = searchParams.get("category") || undefined;
-  const searchQuery = searchParams.get("q") || undefined;
+  const searchQuery = searchParams.get("search") || undefined;
 
-  // ===== Determine page type =====
+  // Determine page type
   const pageType = useMemo<PageType>(() => {
     if (brand) return "brand";
     if (category) return "category";
@@ -25,10 +25,10 @@ export function usePageType(): UsePageTypeReturn {
     return "all";
   }, [brand, category, searchQuery]);
 
-  // ===== slug dùng cho brand / category =====
+  // slug dùng cho brand / category
   const slug = brand || category;
 
-  // ===== Page title (fallback) =====
+  // Page title (fallback)
   const pageTitle = useMemo(() => {
     switch (pageType) {
       case "brand":

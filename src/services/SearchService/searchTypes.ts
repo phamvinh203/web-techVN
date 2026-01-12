@@ -17,6 +17,19 @@ export interface SearchParams {
   limit?: number;
 }
 
+export interface SearchSuggestion {
+  _id: string;
+  name: string;
+  slug: string;
+  thumbnail?: string | null;
+  price?: number;
+}
+
+export interface SuggestionResponse {
+  message: string;
+  data: SearchSuggestion[];
+}
+
 // Query params cho filter
 export interface FilterParams {
   minPrice?: number;
@@ -50,17 +63,4 @@ export interface ProductListResponse {
     products: SearchProduct[];
     pagination: Pagination;
   };
-}
-
-// Suggestion item
-export interface Suggestion {
-  name: string;
-  slug: string;        // Để tạo URL khi click vào suggestion
-  popularity: number;
-}
-
-// Response cho suggestions
-export interface SuggestionResponse {
-  message: string;
-  data: Suggestion[];
 }

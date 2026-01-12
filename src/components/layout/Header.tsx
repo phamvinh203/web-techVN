@@ -1,4 +1,5 @@
-import { Search, ShoppingCart, User } from "lucide-react";
+import { ShoppingCart, User } from "lucide-react";
+import SearchBar from "../common/SearchBar";
 
 export default function Header() {
   return (
@@ -17,17 +18,7 @@ export default function Header() {
           </div>
 
           {/* Search */}
-          <div className="flex flex-1 max-w-2xl items-center gap-2 rounded-full bg-gray-100 px-4 py-2">
-            <Search size={18} className="text-gray-400" />
-            <input
-              type="text"
-              placeholder="Tìm kiếm laptop, phụ kiện..."
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
-            />
-            <button className="rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700">
-              Tìm
-            </button>
-          </div>
+          <SearchBar />
 
           {/* Actions */}
           <div className="flex items-center gap-6">

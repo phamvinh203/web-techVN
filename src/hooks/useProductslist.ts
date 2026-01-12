@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-import { filterProducts } from "@/services/SearchService/searchService";
+import { filterProducts, searchProducts } from "@/services/SearchService/searchService";
 import { getCategoryBySlug } from "@/services/CategoryService/categoryService";
 
 import type { FilterParams, SortOption } from "@/services/SearchService/searchTypes";
@@ -73,8 +73,16 @@ export function useProductList({
         if (pageType === "brand" && slug) params.brand = slug;
         if (pageType === "category" && slug) params.category = slug;
         if (pageType === "search" && searchQuery) params.keyword = searchQuery;
-
-        const res = await filterProducts(params);
+        let res;
+        if (pageType === "search" && searchQuery) {
+          res = await searchProducts({
+            keyword: searchQuery,
+            page,
+            limit,
+          });
+        } else {
+          res = await filterProducts(params);
+        }
 
         setProducts(res.data.products);
         setPagination(res.data.pagination);
@@ -85,7 +93,7 @@ export function useProductList({
             _id: b._id,
             name: b.name,
             slug: b.slug,
-            logo: b.logo || "",
+            logo: "",
           } : null);
         }
       } catch {
@@ -163,7 +171,7 @@ export function useProductList({
 
   if (pageType === "brand" && slug) newParams.set("brand", slug);
   if (pageType === "category" && slug) newParams.set("category", slug);
-  if (pageType === "search" && searchQuery) newParams.set("keyword", searchQuery);
+  if (pageType === "search" && searchQuery) newParams.set("search", searchQuery);
 
   newParams.set("sort", sort);
   newParams.set("page", "1");
