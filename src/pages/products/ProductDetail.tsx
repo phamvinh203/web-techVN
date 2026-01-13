@@ -11,6 +11,8 @@ import ProductSpecificationSection from '@/components/product/ProductSpecificati
 import ProductDescription from '@/components/product/ProductDescription';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useCart } from '@/hooks/useCart';
+
 
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -20,6 +22,7 @@ export default function ProductDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -67,10 +70,24 @@ export default function ProductDetailPage() {
     }
   };
 
+  const handleAddToCart = async () => {
+    if (!product) return;
+
+    try {
+      await addToCart({
+        product_id: product._id,
+        quantity: quantity,
+      });
+      setQuantity(1);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header />
+        <Header onOpenAuth={() => {}} />
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -84,7 +101,7 @@ export default function ProductDetailPage() {
   if (error || !product) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header />
+        <Header onOpenAuth={() => {}} />
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <p className="text-red-500 text-lg mb-4">{error || 'Không tìm thấy sản phẩm'}</p>
@@ -100,7 +117,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header onOpenAuth={() => {}} />
       
       <main className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
@@ -212,18 +229,19 @@ export default function ProductDetailPage() {
 
               {/* Actions */}
               <div className="flex gap-4 pt-4">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="flex-1 bg-red-600 hover:bg-red-700 text-white"
                   disabled={product.quantity === 0}
+                  onClick={handleAddToCart}
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                   Thêm vào giỏ hàng
                 </Button>
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   variant="outline"
                   className="px-4"
                 >

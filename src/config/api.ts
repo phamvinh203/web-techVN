@@ -1,6 +1,8 @@
 import axios from "axios";
 import { TokenManager } from "../utils/tokenManager";
-import logout from "../utils/logout";
+
+import type { ApiResponse } from "@/services/AuthService/authTypes";
+import { logout } from "@/services/AuthService/authService";
 
 const api = axios.create({
   baseURL: "http://localhost:5000/api",
@@ -10,7 +12,7 @@ const api = axios.create({
   },
 });
 
-// Tạo instance riêng cho refresh API (không có interceptor)
+// Axios riêng để refresh (KHÔNG interceptor)
 const refreshApi = axios.create({
   baseURL: "http://localhost:5000/api",
   headers: {
@@ -19,7 +21,7 @@ const refreshApi = axios.create({
   },
 });
 
-// Interceptor để thêm token vào header
+// Request interceptor
 api.interceptors.request.use((config) => {
   const token = TokenManager.getAccessToken();
   if (token) {
@@ -28,50 +30,43 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Interceptor để xử lý response và refresh token nếu cần
+// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const { config: originalRequest, response } = error;
+    const originalRequest = error.config;
 
-    // Chỉ xử lý lỗi 401 và chưa retry
-    if (response?.status !== 401 || originalRequest._retry) {
-      return Promise.reject(error);
-    }
-
-    // Nếu là API delete board với verification token, không auto logout
-    if (
-      originalRequest.url?.includes("/api/home/") &&
-      originalRequest.method === "delete"
-    ) {
+    if (error.response?.status !== 401 || originalRequest._retry) {
       return Promise.reject(error);
     }
 
     originalRequest._retry = true;
+
     const refreshToken = TokenManager.getRefreshToken();
 
-    // Không có refresh token -> logout
     if (!refreshToken) {
-      logout();
+      await logout();
+      TokenManager.clearTokens();
       return Promise.reject(error);
     }
 
     try {
-      // Refresh token
-      const { data } = await refreshApi.post("/auth/refresh", {
+      const response = await refreshApi.post<
+        ApiResponse<{ access_token: string }>
+      >("/auth/refresh-token", {
         refresh_token: refreshToken,
       });
 
-      const { access_token, refresh_token: newRefreshToken } = data;
-      TokenManager.setTokens(access_token, newRefreshToken);
+      const access_token = response.data.data.access_token;
 
-      // Retry với token mới
+      TokenManager.setTokens(access_token, refreshToken);
+
       originalRequest.headers.Authorization = `Bearer ${access_token}`;
       return api(originalRequest);
-    } catch {
-      // Refresh thất bại -> logout
-      logout();
-      return Promise.reject(error);
+    } catch (err) {
+      await logout();
+      TokenManager.clearTokens();
+      return Promise.reject(err);
     }
   }
 );

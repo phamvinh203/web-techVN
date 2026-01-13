@@ -28,3 +28,18 @@ export const login = async (
   });
   return response.data;
 };
+
+export const logout = async (): Promise<void> => {
+  await api.post('/auth/logout');
+}
+
+export const refreshToken = async (): Promise<ApiResponse<{ access_token: string }>> => {
+  const refresh_token = localStorage.getItem("refresh_token");
+
+  const response = await api.post<ApiResponse<{ access_token: string }>>(
+    "/auth/refresh-token",
+    { refresh_token }
+  );
+
+  return response.data;
+};

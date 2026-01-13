@@ -1,7 +1,9 @@
 import { ShoppingCart, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+
 import SearchBar from "../common/SearchBar";
+import { useCart } from "@/hooks/useCart";
 
 
 interface HeaderProps {
@@ -10,6 +12,7 @@ interface HeaderProps {
 
 export default function Header({ onOpenAuth }: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuth();
+  const { itemCount } = useCart();
 
   const getAvatarText = (name: string) => {
     return name.charAt(0).toUpperCase();
@@ -95,10 +98,17 @@ export default function Header({ onOpenAuth }: HeaderProps) {
 
 
             {/* Cart */}
-            <button className="relative flex flex-col items-center text-gray-600 hover:text-blue-600">
-              <ShoppingCart size={20} />
+            <Link to="/cart" className="relative flex flex-col items-center text-gray-600 hover:text-blue-600">
+              <div className="relative">
+                <ShoppingCart size={20} />
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {itemCount > 9 ? '9+' : itemCount}
+                  </span>
+                )}
+              </div>
               <span className="text-xs">Giỏ hàng</span>
-            </button>
+            </Link>
           </div>
         </div>
       </div>
