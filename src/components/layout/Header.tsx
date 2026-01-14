@@ -12,7 +12,9 @@ interface HeaderProps {
 
 export default function Header({ onOpenAuth }: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuth();
-  const { itemCount } = useCart();
+  const { cart } = useCart();
+
+  const itemCount = cart?.items.reduce((total, item) => total + item.quantity, 0) || 0;
 
   const getAvatarText = (name: string) => {
     return name.charAt(0).toUpperCase();
