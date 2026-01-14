@@ -3,6 +3,10 @@ import type {
   ApiResponse,
   LoginResponseData,
   RegisterResponseData,
+  UpdateAvatarResponse,
+  UpdateMeRequest,
+  UpdatePasswordRequest,
+  UserInfo,
 } from "./authTypes";
 
 export const register = async (
@@ -43,3 +47,48 @@ export const refreshToken = async (): Promise<ApiResponse<{ access_token: string
 
   return response.data;
 };
+
+
+// user profile
+export const getMe = async (): Promise<ApiResponse<UserInfo>> => {
+  const res = await api.get<ApiResponse<UserInfo>>("/auth/me");
+  return res.data;
+};
+
+export const updateMe = async (
+  payload: UpdateMeRequest
+): Promise<ApiResponse<UserInfo>> => {
+  const res = await api.put<ApiResponse<UserInfo>>("/auth/me", payload);
+  return res.data;
+};
+
+export const updateAvatar = async (
+  file: File
+): Promise<ApiResponse<UpdateAvatarResponse>> => {
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  const res = await api.post<ApiResponse<UpdateAvatarResponse>>(
+    "/auth/me/avatar",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return res.data;
+};
+
+export const updatePassword = async (
+  payload: UpdatePasswordRequest
+): Promise<ApiResponse<null>> => {
+  const res = await api.put<ApiResponse<null>>(
+    "/auth/me/password",
+    payload
+  );
+  return res.data;
+};
+
+// user addresses

@@ -6,6 +6,7 @@ import SearchBar from "../common/SearchBar";
 import { useCart } from "@/hooks/useCart";
 
 
+
 interface HeaderProps {
   onOpenAuth: () => void;
 }
@@ -42,7 +43,10 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                 {/* Avatar + Name */}
                 <div className="flex items-center gap-2 cursor-pointer">
                   <div className="size-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
-                    {getAvatarText(user.full_name)}
+                    {user.avatar
+                      ? <img src={user.avatar} alt={user.full_name} className="w-full h-full object-cover" />
+                      : getAvatarText(user.full_name)
+                    }
                   </div>
                   <span className="text-sm font-medium">{user.full_name}</span>
                 </div>
@@ -61,7 +65,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                   <ul className="py-2 text-sm text-gray-700">
                     <li>
                       <Link
-                        to="/account"
+                        to="/user/account/profile"
                         className="block px-4 py-2 hover:bg-gray-100"
                       >
                         Tài khoản của tôi

@@ -1,4 +1,8 @@
-/* Request Types */
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
 
 export interface RegisterRequest {
   full_name: string;
@@ -17,16 +21,14 @@ export interface UserInfo {
   _id: string;
   full_name: string;
   email: string;
+  phone?: string;
+  gender?: "MALE" | "FEMALE" | "OTHER";
+  birthday?: string;
+  address?: string;
+  avatar?: string;
   isRole: string;
 }
 
-/* API Response Wrapper */
-
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
 
 /* Auth Response Data */
 
@@ -46,4 +48,26 @@ export interface LoginResponseData {
   refresh_token: string;
 }
 
+// User profile response data
+export interface GetMeResponse {
+  user: UserInfo;
+}
 
+export interface UpdateMeRequest {
+  full_name?: string;
+  phone?: string;
+  gender?: "MALE" | "FEMALE" | "OTHER";
+  birthday?: string;
+  address?: string[];
+}
+
+export interface UpdatePasswordRequest {
+  current_password: string;
+  new_password: string;
+  confirm_password: string;
+}
+
+export interface UpdateAvatarResponse {
+  avatarUrl: string;
+  filePath: string;
+}
