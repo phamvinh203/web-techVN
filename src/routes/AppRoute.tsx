@@ -3,6 +3,7 @@ import HomePage from '@/pages/home/HomePage';
 import ProductPage from '@/pages/products/ProductPage';
 import ProductDetailPage from '@/pages/products/ProductDetail';
 import CartPage from '@/pages/cart/CartPage';
+import CheckoutPage from '@/pages/checkout/CheckoutPage';
 import UserPage from '@/pages/auth/UserPage';
 import ProfileForm from '@/components/profile/ProfileForm';
 import UserOrdersPage from '@/components/profile/UserOrdersPage';
@@ -29,6 +30,9 @@ export default function AppRoute() {
 
       {/* Cart */}
       <Route path="/cart" element={<CartPage />} />
+
+      {/* Checkout */}
+      <Route path="/checkout" element={<CheckoutPage />} />
 
       {/* Search Results */}
       <Route path="/search" element={<ProductPage />} />

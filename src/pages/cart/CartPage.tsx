@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks/useCart';
 
 export default function CartPage() {
+  const navigate = useNavigate();
   const { cart, loading, fetchCart, updateItem, removeItem, setCart } = useCart();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   
@@ -103,6 +104,11 @@ export default function CartPage() {
 
   const handleOpenAuth = () => {
     console.log('Open auth modal');
+  };
+
+  const handleCheckout = () => {
+    const selectedItems = validItems.filter(item => selectedIds.includes(item._id));
+    navigate('/checkout', { state: { selectedItems } });
   };
 
   if (loading) {
@@ -239,6 +245,7 @@ export default function CartPage() {
                   </span>
                 </p>
                 <Button
+                  onClick={handleCheckout}
                   disabled={selectedIds.length === 0}
                   className={`px-8 ${
                     selectedIds.length === 0
