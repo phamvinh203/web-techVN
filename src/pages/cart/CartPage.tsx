@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks/useCart';
 
 export default function CartPage() {
-  const { cart, loading, fetchCart, updateItem, removeItem } = useCart();
+  const { cart, loading, fetchCart, updateItem, removeItem, setCart } = useCart();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  
 
   useEffect(() => {
     fetchCart();
@@ -29,28 +30,67 @@ export default function CartPage() {
   };
 
   const handleIncrease = async (item: any) => {
+    setCart(prev => 
+      prev 
+        ? {
+          ...prev,
+          items: prev.items.map(i => 
+            i._id === item._id
+              ? {
+                ...i,
+                quantity: i.quantity + 1,
+                subtotal: (i.quantity + 1) * i.price,
+              }
+              :i
+          ),
+        }
+        : prev
+    )
     await updateItem({
+      
       item_id: item._id,
       quantity: item.quantity + 1,
     });
-    // Fetch lại cart sau khi update để đảm bảo data đầy đủ
-    await fetchCart();
+
+    
   };
 
   const handleDecrease = async (item: any) => {
     if (item.quantity <= 1) return;
+
+    setCart(prev =>
+      prev
+        ? {
+            ...prev,
+            items: prev.items.map(i =>
+              i._id === item._id
+                ? {
+                    ...i,
+                    quantity: i.quantity - 1,
+                    subtotal: (i.quantity - 1) * i.price,
+                  }
+                : i
+            ),
+          }
+        : prev
+    );
+
     await updateItem({
       item_id: item._id,
       quantity: item.quantity - 1,
     });
-    await fetchCart();
   };
 
   const handleRemove = async (itemId: string) => {
-    // Xóa khỏi selectedIds trước
     setSelectedIds(prev => prev.filter(id => id !== itemId));
+
+    setCart(prev =>
+      prev
+        ? { ...prev, items: prev.items.filter(i => i._id !== itemId) }
+        : prev
+    );
+
     await removeItem(itemId);
-    await fetchCart();
   };
 
   // Lọc các items có product hợp lệ
@@ -93,7 +133,7 @@ export default function CartPage() {
           </div>
         ) : (
           <>
-            {/* ================= HEADER TABLE ================= */}
+            {/*  HEADER TABLE  */}
             <div className="bg-white rounded-lg shadow-sm px-4 py-3 mb-3">
               <div className="grid grid-cols-12 text-sm text-gray-500 font-medium">
                 <div className="col-span-1">
@@ -111,7 +151,7 @@ export default function CartPage() {
               </div>
             </div>
 
-            {/* ================= LIST ITEMS ================= */}
+            {/*  LIST ITEMS  */}
             <div className="space-y-3">
               {validItems.map((item) => (
                 <div
@@ -180,7 +220,7 @@ export default function CartPage() {
               ))}
             </div>
 
-            {/* ================= FOOTER ================= */}
+            {/*  FOOTER  */}
             <div className="bg-white rounded-lg shadow-sm mt-6 px-4 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <input

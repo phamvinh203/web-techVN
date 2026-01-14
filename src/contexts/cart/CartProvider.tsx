@@ -19,8 +19,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const itemCount = cart?.total_items || 0;
 
   const fetchCart = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await getCartAPI();
       setCart(response.data);
     } catch (error) {
@@ -46,8 +46,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const updateItem = async (payload: UpdateCartPayload) => {
     try {
-      const res = await updateCartItem(payload);
-      setCart(res.data);
+     await updateCartItem(payload);
+      // setCart(res.data);
     } catch (error) {
       console.error('Error updating cart item:', error);
       throw error;
@@ -56,8 +56,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const removeItem = async (productId: string) => {
     try {
-      const res = await removeFromCart(productId);
-      setCart(res.data);
+      await removeFromCart(productId);
+      // setCart(res.data);
     } catch (error) {
       console.error('Error removing cart item:', error);
       throw error;
@@ -89,12 +89,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       value={{
         cart,
         loading,
-        
         addToCart,
         updateItem,
         removeItem,
         fetchCart,
         clearCart,
+        setCart,
         itemCount,
       }}
     >

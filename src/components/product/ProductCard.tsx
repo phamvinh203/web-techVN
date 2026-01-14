@@ -2,6 +2,8 @@ import { Link } from 'react-router';
 import type { ProductData, SearchProduct } from '@/services/ProductService/productTypes';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import { useCart } from '@/hooks/useCart';
+
 
 interface ProductCardProps {
   product: ProductData | SearchProduct;
@@ -18,6 +20,10 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
     category_id,
   } = product;
 
+  
+  const { addToCart } = useCart();
+  
+
   // Handle both ProductData and SearchProduct types
   const oldprice = 'oldprice' in product ? product.oldprice : 0;
   const images = 'images' in product ? product.images : [];
@@ -29,6 +35,16 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
   const formatPrice = (value: number) => {
     return new Intl.NumberFormat('vi-VN').format(value) + 'đ';
   };
+
+  
+
+  const handleAddToCart = async () => {
+  await addToCart({
+    product_id: product._id,
+    quantity: 1,
+  });
+};
+
 
   if (viewMode === 'list') {
     return (
@@ -125,7 +141,8 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
         </div>
 
         
-        <Button
+        <Button 
+          onClick={handleAddToCart}
           variant="outline"
           className="w-full border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
         >

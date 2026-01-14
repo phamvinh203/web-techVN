@@ -10,6 +10,7 @@ export interface CartContextType {
   updateItem: (payload: UpdateCartPayload) => Promise<void>;
   removeItem: (productId: string) => Promise<void>;
   clearCart: () => Promise<void>;
+  setCart: React.Dispatch<React.SetStateAction<CartData | null>>
   
   fetchCart: () => Promise<void>;
   itemCount: number;
