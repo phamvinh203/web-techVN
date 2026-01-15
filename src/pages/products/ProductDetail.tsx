@@ -9,9 +9,12 @@ import ProductCard from '@/components/product/ProductCard';
 import ProductImageGallery from '@/components/product/ProductImageGallery';
 import ProductSpecificationSection from '@/components/product/ProductSpecification';
 import ProductDescription from '@/components/product/ProductDescription';
+import ReviewSection from '@/components/reviews/Reviewsection';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks/useCart';
+import { useProductReviews } from '@/hooks/useProductReviews';
+import { Star } from 'lucide-react';
 
 
 export default function ProductDetailPage() {
@@ -23,6 +26,13 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+
+  // Fetch review stats
+  const { stats: reviewStats } = useProductReviews({
+    productId: product?._id || '',
+    page: 1,
+    limit: 1,
+  });
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -169,6 +179,30 @@ export default function ProductDetailPage() {
                 <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
                   {product.name}
                 </h1>
+                
+                {/* Star Rating Display */}
+                {reviewStats && reviewStats.totalReviews > 0 && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center gap-0.5">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-5 h-5 ${
+                            star <= Math.round(reviewStats.avgRating)
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "fill-gray-200 text-gray-200"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">
+                      {reviewStats.avgRating.toFixed(1)}
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      ({reviewStats.totalReviews} đánh giá)
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Price */}
@@ -285,11 +319,14 @@ export default function ProductDetailPage() {
 
         </div>
 
-
+        {/* Review Section */}
+        <div className="mt-8">
+          <ReviewSection productId={product._id} />
+        </div>
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 mt-8">
             <h2 className="text-xl font-bold text-gray-900 mb-6">Sản phẩm liên quan</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {relatedProducts.slice(0, 5).map((relatedProduct) => (

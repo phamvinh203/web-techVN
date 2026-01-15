@@ -1,6 +1,7 @@
 
 export type OrderStatus =
   | "all"
+  | "confirmed"
   | "pending"
   | "shipping"
   | "delivered"
@@ -8,6 +9,7 @@ export type OrderStatus =
 
 export const statusTabs: { key: OrderStatus; label: string }[] = [
   { key: "all", label: "Tất cả đơn" },
+  { key: "confirmed", label: "Đã xác nhận" },
   { key: "pending", label: "Đang xử lý" },
   { key: "shipping", label: "Đang giao" },
   { key: "delivered", label: "Đã giao" },
@@ -15,6 +17,7 @@ export const statusTabs: { key: OrderStatus; label: string }[] = [
 ];
 
 export const statusColors: Record<string, string> = {
+  confirmed: "bg-purple-100 text-purple-700",
   pending: "bg-yellow-100 text-yellow-700",
   shipping: "bg-blue-100 text-blue-700",
   delivered: "bg-green-100 text-green-700",
@@ -22,6 +25,7 @@ export const statusColors: Record<string, string> = {
 };
 
 export const statusLabels: Record<string, string> = {
+  confirmed: "Đã xác nhận",
   pending: "Đang xử lý",
   shipping: "Đang giao",
   delivered: "Đã giao",

@@ -44,9 +44,23 @@ export default function CheckoutPage() {
     }
   }, [location.state, cart, addresses, setSelectedItems, setSelectedAddress]);
 
-  const subtotal = selectedItems.reduce((sum, item) => sum + item.subtotal, 0);
-  const shippingFee = subtotal > 0 ? 30000 : 0;
-  const total = subtotal + shippingFee;
+  const FREE_SHIPPING_THRESHOLD = 5_000_000;
+  const SHIPPING_FEE = 30_000;
+
+  const totalAmount = selectedItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  const shippingFee =
+    totalAmount >= FREE_SHIPPING_THRESHOLD
+      ? 0
+      : totalAmount > 0
+      ? SHIPPING_FEE
+      : 0;
+
+  const total = totalAmount + shippingFee;
+
 
   const handlePlaceOrder = async () => {
     await handleCheckout();
@@ -255,7 +269,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tạm tính ({selectedItems.length} sản phẩm)</span>
-                  <span className="font-medium">{subtotal.toLocaleString("vi-VN")}đ</span>
+                  <span className="font-medium">{totalAmount.toLocaleString("vi-VN")}đ</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Phí vận chuyển</span>

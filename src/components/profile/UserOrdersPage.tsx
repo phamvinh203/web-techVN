@@ -16,6 +16,8 @@ export default function UserOrdersPage() {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 10;
 
+
+
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
@@ -60,6 +62,8 @@ export default function UserOrdersPage() {
     }
     return "";
   };
+
+  
 
   return (
     <div className="bg-white rounded-lg p-6">
@@ -180,16 +184,27 @@ export default function UserOrdersPage() {
                     </div>
 
                     <div className="flex gap-2">
-                      <button className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
-                        Theo dõi đơn
-                      </button>
-
                       {order.order_status === "shipping" && (
-                        <button className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                          Đã nhận hàng
+                        <button className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
+                          Theo dõi đơn
+                        </button>
+                      )}
+
+                      {order.order_status === "delivered" && (
+                        <button
+                          className="px-4 py-2 text-sm bg-green-500 text-white rounded-lg cursor-pointer opacity-70"
+                        >
+                          Đã nhận được hàng
+                        </button>
+                      )}
+
+                      {order.order_status === "cancelled" && (
+                        <button className="px-4 py-2 text-sm bg-orange-500 text-white rounded-lg cursor-pointer hover:bg-orange-600">
+                          Mua lại
                         </button>
                       )}
                     </div>
+
                   </div>
                 </div>
               ))
