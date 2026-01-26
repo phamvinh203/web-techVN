@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { usePageType } from "@/hooks/usePageType";
 import { useProductList } from "@/hooks/useProductslist";
 import { useProductSort } from "@/hooks/useProductSort";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 export default function ProductPage() {
   // ===== Page context (from query param) =====
@@ -156,6 +157,7 @@ export default function ProductPage() {
               </div>
             )}
           </main>
+          <ChatWidget />
         </div>
       </div>
     </div>

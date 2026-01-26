@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks/useCart';
 import { useProductReviews } from '@/hooks/useProductReviews';
 import { Star } from 'lucide-react';
+import ChatWidget from '@/components/chat/ChatWidget';
 
 
 export default function ProductDetailPage() {
@@ -336,6 +337,8 @@ export default function ProductDetailPage() {
           </div>
         )}
       </main>
+
+      <ChatWidget />
 
       <Footer />
     </div>
