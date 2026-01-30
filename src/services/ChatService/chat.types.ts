@@ -1,66 +1,46 @@
-// services/chat/chat.types.ts
-
-/* =========================
- * CHAT MESSAGE (FRONTEND)
- * ========================= */
-
 export type ChatRole = "user" | "bot";
 
-export interface ChatMessage {
-  role: ChatRole;
-  content: string;
+export interface ProductLite {
+  id?: string;
+  _id?: string;
+  name: string;
+  images?: string[];
+  slug?: string;
+  status?: "active" | "inactive";
+  deleted?: boolean;
 }
 
-/* =========================
- * PRODUCT (KHỚP MONGO)
- * ========================= */
-
-export interface ChatProduct {
-  _id: string;
-  name: string;
-  slug: string;
+// Superset type to keep compatibility with older product suggestion UI
+export interface ChatProduct extends ProductLite {
   price: number;
   oldprice?: number;
-
-  images: string[];
-
   description?: string;
-
-  specification?: Record<string, any>;
-
+  specification?: Record<string, unknown>;
   buyturn?: number;
   quantity?: number;
-
   brand_id?: {
     _id: string;
     name: string;
   };
-
   category_id?: string;
-
-  status?: "active" | "inactive";
-  deleted?: boolean;
-
   createdAt?: string;
   updatedAt?: string;
 }
 
-/* =========================
- * CHAT DATA (data field)
- * ========================= */
-
-export interface ChatData {
-  reply: string;
-  sessionId: string;
-  historyLength: number;
-  products?: ChatProduct[]; // Optional - chỉ có khi bot gợi ý sản phẩm
+export interface ChatMessage {
+  role: ChatRole;
+  content: string;
+  product?: ProductLite;
 }
 
-/* =========================
- * API RESPONSE
- * ========================= */
+export interface ChatResponseData {
+  reply: string;
+  product: ProductLite | null;
+  sessionId: string;
+  historyLength?: number;
+}
 
-export interface ChatApiResponse {
+export interface ChatResponse {
   message: string;
-  data: ChatData;
+  data: ChatResponseData;
 }

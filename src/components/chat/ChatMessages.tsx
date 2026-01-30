@@ -25,7 +25,7 @@ const ChatMessages = ({ messages, loading, messagesEndRef }: ChatMessagesProps) 
           </div>
         </div>
       )}
-      <div ref={messagesEndRef} />
+      <div ref={messagesEndRef ?? undefined} />
     </div>
   );
 };
