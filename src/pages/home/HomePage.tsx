@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer'
 import Header from '@/components/layout/Header'
 import ListProduct from '@/components/product/ListProduct'
 import React, { useState } from 'react'
+import ChatWidget from '@/components/chat/ChatWidget'
 
 
 const HomePage: React.FC = () => {
@@ -21,6 +22,7 @@ const HomePage: React.FC = () => {
             <FeaturedBrands />
             <CategorySection className="mt-10" />
             <ListProduct />
+            <ChatWidget />
             <Footer />
         </>
     )
