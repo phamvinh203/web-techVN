@@ -1,28 +1,24 @@
 import api from "@/config/api";
-import { getSessionId, saveSessionId } from "@/utils/session";
-import type { ChatApiResponse } from "./chat.types";
+import { getSessionId, setSessionId } from "@/utils/session";
+import type { ChatResponse, ChatResponseData } from "./chat.types";
 
 /**
- * Gửi tin nhắn chat tới backend
- * @param message - Nội dung tin nhắn
- * @returns Response data từ API
+ * Send chat message to backend and receive reply + optional product suggestion.
  */
-export const sendChatMessage = async (message: string): Promise<ChatApiResponse["data"]> => {
-  const sessionId = getSessionId();
-
-  // Request body: { "message": "...", "sessionId": "..." } (optional sessionId)
+export const sendChat = async (message: string, sessionId?: string): Promise<ChatResponseData> => {
   const requestBody: { message: string; sessionId?: string } = { message };
-  if (sessionId) {
-    requestBody.sessionId = sessionId;
+  const persistedSession = sessionId ?? getSessionId();
+
+  if (persistedSession) {
+    requestBody.sessionId = persistedSession;
   }
 
-  const res = await api.post<ChatApiResponse>("/chat", requestBody);
+  const res = await api.post<ChatResponse>("/chat", requestBody);
+  const responseData = res.data.data;
 
-  // Lưu sessionId từ server nếu có
-  if (res.data.data?.sessionId) {
-    saveSessionId(res.data.data.sessionId);
+  if (responseData?.sessionId) {
+    setSessionId(responseData.sessionId);
   }
 
-  // Return data field từ response
-  return res.data.data;
+  return responseData;
 };
