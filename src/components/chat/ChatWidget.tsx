@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-import { useChat } from "./ChatProvider";
+import { useChat } from "../../contexts/ChatProvider";
 
 const ChatWidget = () => {
   const { isOpen, messages, isLoading, openChat, closeChat, sendMessage } = useChat();
