@@ -10,6 +10,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
   register: (full_name: string, email: string, password: string) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
+  updateUser: (userData: UserInfo) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -85,6 +86,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     window.location.href = "/";
   };
 
+  const handleUpdateUser = (userData: UserInfo) => {
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -94,6 +100,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login: handleLogin,
         register: handleRegister,
         logout: handleLogout,
+        updateUser: handleUpdateUser,
       }}
     >
       {children}

@@ -15,6 +15,7 @@ export interface CheckoutRequest {
 
 /** Order item trả về */
 export interface OrderItem {
+  _id: string;
   product_id: {
     _id: string;
     name: string;
@@ -24,17 +25,31 @@ export interface OrderItem {
   quantity: number;
   price: number;
   subtotal: number;
+  reviewed: boolean;
+}
+
+export interface ShippingAddress {
+  full_name: string;
+  phone: string;
+  address: string;
+  ward: string;
+  district: string;
+  province: string;
+}
+
+export interface Payment {
+  method: PaymentMethod;
+  status: string;
+  amount: number;
 }
 
 export interface Order {
   _id: string;
+  user_id: string;
   order_code: string;
   items: OrderItem[];
-  shipping_address: string;
-  payment_method: string | {
-    type: PaymentMethod;
-    status: string;
-  };
+  shipping_address: ShippingAddress;
+  payment: Payment;
   order_status: string;
   total_amount: number;
   shipping_fee: number;

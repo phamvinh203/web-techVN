@@ -1,6 +1,7 @@
 import { getMe, updateAvatar, updateMe, updatePassword } from "@/services/AuthService/authService";
 import type { UpdateMeRequest, UpdatePasswordRequest, UserInfo } from "@/services/AuthService/authTypes";
 import { useCallback, useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 interface UseProfileReturn {
@@ -15,6 +16,7 @@ interface UseProfileReturn {
 }
 
 export const useProfile = (): UseProfileReturn => {
+  const { updateUser } = useAuth();
   const [user, setUser] = useState<UserInfo | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,6 +46,7 @@ export const useProfile = (): UseProfileReturn => {
 
       const res = await updateMe(payload);
       setUser(res.data);
+      updateUser(res.data); // Sync to AuthContext
 
       return true;
     } catch (err: any) {
@@ -62,14 +65,14 @@ export const useProfile = (): UseProfileReturn => {
 
       const res = await updateAvatar(file);
 
-      setUser((prev) =>
-        prev
-          ? {
-              ...prev,
-              avatar: res.data.avatarUrl,
-            }
-          : prev
-      );
+      setUser((prev) => {
+        if (prev) {
+          const updated = { ...prev, avatar: res.data.avatarUrl };
+          updateUser(updated); // Sync to AuthContext
+          return updated;
+        }
+        return prev;
+      });
 
       return true;
     } catch (err: any) {

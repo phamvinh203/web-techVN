@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getUserOrders } from "@/services/CheckoutService/checkoutService";
+import { getUserOrders, cancelOrder } from "@/services/CheckoutService/checkoutService";
 import type { Order, OrderItem } from "@/services/CheckoutService/checkoutTypes";
 import Pagination from "@/components/common/Pagination";
 import { formatDateTime, formatPrice, statusColors, statusLabels, statusTabs, type OrderStatus } from "@/utils/orderUtils";
@@ -61,6 +61,23 @@ export default function UserOrdersPage() {
       return item.product_id.images[0];
     }
     return "";
+  };
+
+  const handleCancelOrder = async (orderId: string) => {
+    if (!confirm("Bạn có chắc muốn hủy đơn hàng này?")) return;
+    
+    try {
+      await cancelOrder(orderId);
+      // Refresh orders list after successful cancellation
+      const status = activeTab === "all" ? undefined : activeTab;
+      const response = await getUserOrders(currentPage, limit, status);
+      setOrders(response.data.orders);
+      setTotalPages(response.data.pagination.totalPages);
+      alert("Đã hủy đơn hàng thành công!");
+    } catch (error) {
+      console.error("Failed to cancel order:", error);
+      alert("Hủy đơn hàng thất bại. Vui lòng thử lại.");
+    }
   };
 
   
@@ -184,6 +201,15 @@ export default function UserOrdersPage() {
                     </div>
 
                     <div className="flex gap-2">
+                      {order.order_status === "pending" && (
+                        <button 
+                          onClick={() => handleCancelOrder(order._id)}
+                          className="px-4 py-2 text-sm border border-red-500 text-red-500 rounded-lg hover:bg-red-50"
+                        >
+                          Hủy đơn hàng
+                        </button>
+                      )}
+
                       {order.order_status === "shipping" && (
                         <button className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">
                           Theo dõi đơn

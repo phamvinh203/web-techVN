@@ -27,3 +27,10 @@ export const getUserOrders = async (
   });
   return res.data;
 };
+
+// hủy đơn hàng
+export const cancelOrder = async (
+  orderId: string
+): Promise<void> => {
+  await api.post(`/orders/${orderId}/cancel`);
+};

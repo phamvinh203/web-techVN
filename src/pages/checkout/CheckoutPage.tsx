@@ -10,7 +10,7 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { addresses } = useAddress();
-  const { cart, setCart } = useCart();
+  const { cart, fetchCart } = useCart();
 
   const {
     selectedAddress,
@@ -44,6 +44,13 @@ export default function CheckoutPage() {
     }
   }, [location.state, cart, addresses, setSelectedItems, setSelectedAddress]);
 
+  // Refresh cart after successful checkout
+  useEffect(() => {
+    if (orderResult) {
+      fetchCart();
+    }
+  }, [orderResult, fetchCart]);
+
   const FREE_SHIPPING_THRESHOLD = 5_000_000;
   const SHIPPING_FEE = 30_000;
 
@@ -64,20 +71,6 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async () => {
     await handleCheckout();
-    if (orderResult) {
-      // Clear cart items that were checked out
-      if (cart) {
-        const remainingItems = cart.items.filter(
-          (cartItem) => !selectedItems.some((selected) => selected._id === cartItem._id)
-        );
-        setCart({
-          ...cart,
-          items: remainingItems,
-          total_items: remainingItems.length,
-          total_amount: remainingItems.reduce((sum, item) => sum + item.subtotal, 0),
-        });
-      }
-    }
   };
 
   // Success state after checkout

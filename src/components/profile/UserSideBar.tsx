@@ -1,8 +1,8 @@
 import { NavLink } from 'react-router-dom';
-import { useProfile } from '@/hooks/useProfile';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function UserSidebar() {
-  const { user } = useProfile();
+  const { user } = useAuth();
 
   const baseClass =
     'block px-3 py-2 rounded hover:bg-gray-100 transition';
@@ -85,7 +85,7 @@ export default function UserSidebar() {
               `${baseClass} ${isActive ? activeClass : ''}`
             }
           >
-            Thống báo
+            Thông báo
           </NavLink>
         </li>
       </ul>
