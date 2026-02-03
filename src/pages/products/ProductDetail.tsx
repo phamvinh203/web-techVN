@@ -26,7 +26,7 @@ export default function ProductDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const { addToCart } = useCart();
+  const { addToCart, loading: cartLoading } = useCart();
 
   // Fetch review stats
   const { stats: reviewStats } = useProductReviews({
@@ -267,7 +267,7 @@ export default function ProductDetailPage() {
                 <Button
                   size="lg"
                   className="flex-1 bg-red-600 hover:bg-red-700 text-white"
-                  disabled={product.quantity === 0}
+                  disabled={product.quantity === 0 || cartLoading}
                   onClick={handleAddToCart}
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

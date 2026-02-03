@@ -161,7 +161,7 @@ export default function CartPage() {
             <div className="space-y-3">
               {validItems.map((item) => (
                 <div
-                  key={item._id}
+                  key={item.product._id}
                   className="bg-white rounded-lg shadow-sm px-4 py-4"
                 >
                   <div className="grid grid-cols-12 items-center gap-3">

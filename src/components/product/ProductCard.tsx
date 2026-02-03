@@ -21,7 +21,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
   } = product;
 
   
-  const { addToCart } = useCart();
+  const { addToCart, loading } = useCart();
   
 
   // Handle both ProductData and SearchProduct types
@@ -39,11 +39,11 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
   
 
   const handleAddToCart = async () => {
-  await addToCart({
-    product_id: product._id,
-    quantity: 1,
-  });
-};
+    await addToCart({
+      product_id: product._id,
+      quantity: 1,
+    });
+  };
 
 
   if (viewMode === 'list') {

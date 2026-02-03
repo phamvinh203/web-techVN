@@ -74,7 +74,7 @@ export default function Header({ onOpenAuth }: HeaderProps) {
 
                     <li>
                       <Link
-                        to="/orders"
+                        to="/user/orders"
                         className="block px-4 py-2 hover:bg-gray-100"
                       >
                         Đơn mua
