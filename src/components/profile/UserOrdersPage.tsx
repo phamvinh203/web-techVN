@@ -1,13 +1,21 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getUserOrders, cancelOrder } from "@/services/CheckoutService/checkoutService";
 import type { Order, OrderItem } from "@/services/CheckoutService/checkoutTypes";
 import Pagination from "@/components/common/Pagination";
 import { formatDateTime, formatPrice, statusColors, statusLabels, statusTabs, type OrderStatus } from "@/utils/orderUtils";
 
-
-
+const CANCEL_REASONS = [
+  "Đặt nhầm sản phẩm",
+  "Muốn thay đổi địa chỉ giao hàng",
+  "Muốn thay đổi phương thức thanh toán",
+  "Tìm được giá rẻ hơn ở nơi khác",
+  "Không còn nhu cầu mua nữa",
+  "Khác"
+];
 
 export default function UserOrdersPage() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<OrderStatus>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [orders, setOrders] = useState<Order[]>([]);
@@ -16,7 +24,12 @@ export default function UserOrdersPage() {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 10;
 
-
+  // Cancel dialog state
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(null);
+  const [selectedReason, setSelectedReason] = useState("");
+  const [customReason, setCustomReason] = useState("");
+  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -63,24 +76,46 @@ export default function UserOrdersPage() {
     return "";
   };
 
-  const handleCancelOrder = async (orderId: string) => {
-    if (!confirm("Bạn có chắc muốn hủy đơn hàng này?")) return;
+  const openCancelDialog = (orderId: string) => {
+    setCancellingOrderId(orderId);
+    setSelectedReason("");
+    setCustomReason("");
+    setShowCancelDialog(true);
+  };
+
+  const closeCancelDialog = () => {
+    setShowCancelDialog(false);
+    setCancellingOrderId(null);
+    setSelectedReason("");
+    setCustomReason("");
+  };
+
+  const handleConfirmCancel = async () => {
+    if (!cancellingOrderId) return;
     
+    const reason = selectedReason === "Khác" ? customReason : selectedReason;
+    if (!reason.trim()) {
+      alert("Vui lòng chọn hoặc nhập lý do hủy đơn");
+      return;
+    }
+
+    setCancelling(true);
     try {
-      await cancelOrder(orderId);
+      await cancelOrder(cancellingOrderId, reason);
       // Refresh orders list after successful cancellation
       const status = activeTab === "all" ? undefined : activeTab;
       const response = await getUserOrders(currentPage, limit, status);
       setOrders(response.data.orders);
       setTotalPages(response.data.pagination.totalPages);
+      closeCancelDialog();
       alert("Đã hủy đơn hàng thành công!");
     } catch (error) {
       console.error("Failed to cancel order:", error);
       alert("Hủy đơn hàng thất bại. Vui lòng thử lại.");
+    } finally {
+      setCancelling(false);
     }
   };
-
-  
 
   return (
     <div className="bg-white rounded-lg p-6">
@@ -203,7 +238,7 @@ export default function UserOrdersPage() {
                     <div className="flex gap-2">
                       {order.order_status === "pending" && (
                         <button 
-                          onClick={() => handleCancelOrder(order._id)}
+                          onClick={() => openCancelDialog(order._id)}
                           className="px-4 py-2 text-sm border border-red-500 text-red-500 rounded-lg hover:bg-red-50"
                         >
                           Hủy đơn hàng
@@ -224,8 +259,11 @@ export default function UserOrdersPage() {
                         </button>
                       )}
 
-                      {order.order_status === "cancelled" && (
-                        <button className="px-4 py-2 text-sm bg-orange-500 text-white rounded-lg cursor-pointer hover:bg-orange-600">
+                      {order.order_status === "cancelled" && order.items.length > 0 && (
+                        <button 
+                          onClick={() => navigate(`/product/${order.items[0].product_id.slug}`)}
+                          className="px-4 py-2 text-sm bg-orange-500 text-white rounded-lg cursor-pointer hover:bg-orange-600"
+                        >
                           Mua lại
                         </button>
                       )}
@@ -249,6 +287,74 @@ export default function UserOrdersPage() {
           )}
         </>
       )}
+
+      {/* Cancel Order Dialog */}
+      {showCancelDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold mb-4">Hủy đơn hàng</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Vui lòng chọn lý do hủy đơn hàng:
+            </p>
+
+            {/* Reason Options */}
+            <div className="space-y-2 mb-4">
+              {CANCEL_REASONS.map((reason) => (
+                <label
+                  key={reason}
+                  className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition ${
+                    selectedReason === reason
+                      ? "border-red-500 bg-red-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="cancelReason"
+                    value={reason}
+                    checked={selectedReason === reason}
+                    onChange={() => setSelectedReason(reason)}
+                    className="w-4 h-4 text-red-600"
+                  />
+                  <span className="text-sm">{reason}</span>
+                </label>
+              ))}
+            </div>
+
+            {/* Custom Reason Input */}
+            {selectedReason === "Khác" && (
+              <div className="mb-4">
+                <textarea
+                  value={customReason}
+                  onChange={(e) => setCustomReason(e.target.value)}
+                  placeholder="Nhập lý do hủy đơn..."
+                  rows={3}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500"
+                />
+              </div>
+            )}
+
+            {/* Buttons */}
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={closeCancelDialog}
+                disabled={cancelling}
+                className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50 disabled:opacity-50"
+              >
+                Đóng
+              </button>
+              <button
+                onClick={handleConfirmCancel}
+                disabled={cancelling || !selectedReason || (selectedReason === "Khác" && !customReason.trim())}
+                className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {cancelling ? "Đang xử lý..." : "Xác nhận hủy"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

@@ -19,6 +19,7 @@ export interface OrderItem {
   product_id: {
     _id: string;
     name: string;
+    slug: string;
     images: string[];
   };
   name: string;

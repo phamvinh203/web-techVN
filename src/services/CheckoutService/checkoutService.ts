@@ -30,7 +30,10 @@ export const getUserOrders = async (
 
 // hủy đơn hàng
 export const cancelOrder = async (
-  orderId: string
+  orderId: string,
+  reason: string
 ): Promise<void> => {
-  await api.post(`/orders/${orderId}/cancel`);
+  await api.post(`/orders/${orderId}/cancel`, {
+    cancelled_reason: reason
+  });
 };
