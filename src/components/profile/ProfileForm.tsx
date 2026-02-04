@@ -152,26 +152,32 @@ export default function ProfileForm() {
           onSubmit={handleSubmit}
           className="col-span-12 md:col-span-8 space-y-5"
         >
-          <Input
-            label="Họ và tên"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="Nhập họ và tên"
-          />
+          <div>
+            <label className="block text-sm font-medium mb-2">Họ và tên</label>
+            <Input
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Nhập họ và tên"
+            />
+          </div>
 
-          <Input
-            label="Email"
-            value={user?.email || ""}
-            disabled
-            className="bg-gray-50"
-          />
+          <div>
+            <label className="block text-sm font-medium mb-2">Email</label>
+            <Input
+              value={user?.email || ""}
+              disabled
+              className="bg-gray-50"
+            />
+          </div>
 
-          <Input
-            label="Số điện thoại"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Nhập số điện thoại"
-          />
+          <div>
+            <label className="block text-sm font-medium mb-2">Số điện thoại</label>
+            <Input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Nhập số điện thoại"
+            />
+          </div>
 
           {/* Gender */}
           <div>

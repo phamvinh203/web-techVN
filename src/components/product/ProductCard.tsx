@@ -20,9 +20,9 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
     category_id,
   } = product;
 
-  
-  const { addToCart, loading } = useCart();
-  
+
+  const { addToCart } = useCart();
+
 
   // Handle both ProductData and SearchProduct types
   const oldprice = 'oldprice' in product ? product.oldprice : 0;
@@ -75,7 +75,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
           </Link>
 
           <p className="text-sm text-muted-foreground mb-3">
-            {brand_id?.name} • {category_id?.name}
+            {brand_id?.name} • {typeof category_id === 'object' ? category_id?.name : category_id}
           </p>
 
           <div className="flex items-center gap-3">
@@ -125,7 +125,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
 
         {/* Brand & Category */}
         <p className="text-xs text-muted-foreground">
-          {brand_id?.name} • {category_id?.name}
+          {brand_id?.name} • {typeof category_id === 'object' ? category_id?.name : category_id}
         </p>
 
         {/* Price */}

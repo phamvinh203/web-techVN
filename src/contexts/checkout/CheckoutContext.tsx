@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import type { Address } from "@/services/AddressService/addressTypes";
-import type { PaymentMethod, OrdersResponse } from "@/services/CheckoutService/checkoutTypes";
+import type { PaymentMethod, Order } from "@/services/CheckoutService/checkoutTypes";
 import type { CartItem } from "@/services/CartService/cartTypes";
 
 export type CheckoutStep = "address" | "payment" | "confirm";
@@ -14,7 +14,7 @@ export interface CheckoutContextType {
   currentStep: CheckoutStep;
   loading: boolean;
   error: string | null;
-  orderResult: OrdersResponse | null;
+  orderResult: Order | null;
 
   // Actions
   setSelectedAddress: (address: Address | null) => void;

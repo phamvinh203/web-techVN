@@ -46,7 +46,7 @@ export default function ProductPage() {
 
   return (
     <div className="w-full">
-      <Header />
+      <Header onOpenAuth={() => {}} />
 
       <div className="mx-auto max-w-7xl px-4 py-6">
         {/* ===== Breadcrumb ===== */}

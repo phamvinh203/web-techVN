@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { CheckoutContext } from "./CheckoutContext";
 import { checkoutService } from "@/services/CheckoutService/checkoutService";
 import type { Address } from "@/services/AddressService/addressTypes";
-import type { PaymentMethod, OrdersResponse } from "@/services/CheckoutService/checkoutTypes";
+import type { PaymentMethod, Order } from "@/services/CheckoutService/checkoutTypes";
 import type { CartItem } from "@/services/CartService/cartTypes";
 import type { CheckoutStep } from "./CheckoutContext";
 
@@ -18,7 +18,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   const [currentStep, setCurrentStep] = useState<CheckoutStep>("address");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [orderResult, setOrderResult] = useState<OrdersResponse | null>(null);
+  const [orderResult, setOrderResult] = useState<Order | null>(null);
 
   const resetCheckout = useCallback(() => {
     setSelectedAddress(null);

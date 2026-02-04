@@ -39,11 +39,6 @@ const ProductSuggestion = ({ products }: ProductSuggestionProps) => {
                       {product.brand_id.name}
                     </span>
                   )}
-                  {product.category_id?.name && (
-                    <span className="text-xs text-gray-400">
-                      {product.category_id.name}
-                    </span>
-                  )}
                 </div>
               </div>
               <div className="text-right ml-3">
