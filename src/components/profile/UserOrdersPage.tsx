@@ -4,6 +4,7 @@ import { getUserOrders, cancelOrder } from "@/services/CheckoutService/checkoutS
 import type { Order, OrderItem } from "@/services/CheckoutService/checkoutTypes";
 import Pagination from "@/components/common/Pagination";
 import { formatDateTime, formatPrice, statusColors, statusLabels, statusTabs, type OrderStatus } from "@/utils/orderUtils";
+import { toast } from "react-toastify";
 
 const CANCEL_REASONS = [
   "Đặt nhầm sản phẩm",
@@ -95,7 +96,7 @@ export default function UserOrdersPage() {
     
     const reason = selectedReason === "Khác" ? customReason : selectedReason;
     if (!reason.trim()) {
-      alert("Vui lòng chọn hoặc nhập lý do hủy đơn");
+      toast.error("Vui lòng chọn hoặc nhập lý do hủy đơn");
       return;
     }
 
@@ -108,10 +109,10 @@ export default function UserOrdersPage() {
       setOrders(response.data.orders);
       setTotalPages(response.data.pagination.totalPages);
       closeCancelDialog();
-      alert("Đã hủy đơn hàng thành công!");
+      toast.success("Đã hủy đơn hàng thành công!");
     } catch (error) {
       console.error("Failed to cancel order:", error);
-      alert("Hủy đơn hàng thất bại. Vui lòng thử lại.");
+      toast.error("Hủy đơn hàng thất bại. Vui lòng thử lại.");
     } finally {
       setCancelling(false);
     }

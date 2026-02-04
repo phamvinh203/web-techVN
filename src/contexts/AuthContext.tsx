@@ -3,6 +3,7 @@ import { TokenService } from '@/services/token.service';
 import { setLogoutCallback } from '@/config/api';
 import { login as loginApi, register as registerApi, logout as logoutApi } from '@/services/AuthService/authService';
 import type { UserInfo } from '@/services/AuthService/authTypes';
+import { toast } from 'react-toastify';
 
 /**
  * Auth Context
@@ -45,6 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     TokenService.clearAll();
     setUser(null);
+    toast.info('Đã đăng xuất');
     window.location.href = '/';
   }, []);
 
@@ -109,13 +111,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setUser(userInfo);
         localStorage.setItem(USER_KEY, JSON.stringify(userInfo));
+        toast.success('Đăng nhập thành công');
 
         return { success: true, message: response.message };
       }
 
+      toast.error(response.message || 'Đăng nhập thất bại');
       return { success: false, message: response.message || 'Đăng nhập thất bại' };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Đăng nhập thất bại';
+      toast.error(errorMessage);
       return { success: false, message: errorMessage };
     }
   };
@@ -128,12 +133,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await registerApi(full_name, email, password);
 
       if (response.success) {
+        toast.success('Đăng ký thành công! Vui lòng đăng nhập');
         return { success: true, message: response.message };
       }
 
+      toast.error(response.message || 'Đăng ký thất bại');
       return { success: false, message: response.message || 'Đăng ký thất bại' };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Đăng ký thất bại';
+      toast.error(errorMessage);
       return { success: false, message: errorMessage };
     }
   };

@@ -3,6 +3,7 @@ import { Input } from "../ui/input";
 import { useProfile } from "@/hooks/useProfile";
 import DefaultAddressCard from "./DefaultAddressCard";
 import RecentOrdersCard from "./RecentOrdersCard";
+import { toast } from "react-toastify";
 
 type Gender = "MALE" | "FEMALE" | "OTHER" | "";
 
@@ -69,10 +70,10 @@ export default function ProfileForm() {
     });
 
     if (success) {
-      setMessage({ type: "success", text: "Cập nhật thông tin thành công" });
+      toast.success("Cập nhật thông tin thành công");
       fetchProfile();
     } else {
-      setMessage({ type: "error", text: error || "Cập nhật thất bại" });
+      toast.error(error || "Cập nhật thất bại");
     }
 
     setSaving(false);
@@ -86,25 +87,22 @@ export default function ProfileForm() {
     if (!file) return;
 
     if (file.size > 1024 * 1024) {
-      setMessage({ type: "error", text: "Dung lượng ảnh tối đa 1MB" });
+      toast.error("Dung lượng ảnh tối đa 1MB");
       return;
     }
 
     if (!["image/jpeg", "image/png"].includes(file.type)) {
-      setMessage({
-        type: "error",
-        text: "Chỉ chấp nhận định dạng JPEG, PNG",
-      });
+      toast.error("Chỉ chấp nhận định dạng JPEG, PNG");
       return;
     }
 
     const success = await onUpdateAvatar(file);
 
     if (success) {
-      setMessage({ type: "success", text: "Cập nhật avatar thành công" });
+      toast.success("Cập nhật avatar thành công");
       fetchProfile();
     } else {
-      setMessage({ type: "error", text: error || "Cập nhật avatar thất bại" });
+      toast.error(error || "Cập nhật avatar thất bại");
     }
   };
 

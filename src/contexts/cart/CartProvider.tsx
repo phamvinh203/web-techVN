@@ -10,6 +10,7 @@ import {
   clearCart as clearCartAPI
 } from '@/services/CartService/cartService';
 import { useAuth } from '../AuthContext';
+import { toast } from 'react-toastify';
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartData | null>(null);
@@ -93,8 +94,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
       // Fetch lại cart để sync với server
       await fetchCart();
+      toast.success('Đã thêm sản phẩm vào giỏ hàng');
     } catch (error) {
       console.error('Error adding to cart:', error);
+      toast.error('Không thể thêm sản phẩm vào giỏ hàng');
       // Rollback: fetch lại cart từ server nếu có lỗi
       await fetchCart();
       throw error;
@@ -107,9 +110,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const updateItem = async (payload: UpdateCartPayload) => {
     try {
      await updateCartItem(payload);
+     toast.success('Đã cập nhật số lượng');
       // setCart(res.data);
     } catch (error) {
       console.error('Error updating cart item:', error);
+      toast.error('Không thể cập nhật số lượng');
       throw error;
     }
   };
@@ -117,9 +122,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const removeItem = async (productId: string) => {
     try {
       await removeFromCart(productId);
+      toast.success('Đã xóa sản phẩm khỏi giỏ hàng');
       // setCart(res.data);
     } catch (error) {
       console.error('Error removing cart item:', error);
+      toast.error('Không thể xóa sản phẩm');
       throw error;
     }
   };
@@ -128,8 +135,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     try {
       await clearCartAPI();
       setCart(null);
+      toast.success('Đã xóa toàn bộ giỏ hàng');
     } catch (error) {
       console.error('Error clearing cart:', error);
+      toast.error('Không thể xóa giỏ hàng');
       throw error;
     }
   };
@@ -162,3 +171,4 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     </CartContext.Provider>
   );
 };
+

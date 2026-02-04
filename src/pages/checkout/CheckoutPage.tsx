@@ -5,6 +5,7 @@ import { useAddress } from "@/hooks/useAddress";
 import { useCart } from "@/hooks/useCart";
 import type { Address } from "@/services/AddressService/addressTypes";
 import type { PaymentMethod } from "@/services/CheckoutService/checkoutTypes";
+// import { toast } from "react-toastify";
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (orderResult) {
       fetchCart();
+      // toast.success(`Đặt hàng thành công! Mã đơn: #${orderResult.order_code}`);
     }
   }, [orderResult, fetchCart]);
 

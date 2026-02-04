@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useProfile } from "@/hooks/useProfile";
+import { toast } from "react-toastify";
 
 export default function UserChangePassword() {
   const { onUpdatePassword, loading, error } = useProfile();
@@ -18,22 +19,22 @@ export default function UserChangePassword() {
 
     // Validate
     if (!currentPassword || !newPassword || !confirmPassword) {
-      setMessage({ type: "error", text: "Vui lòng điền đầy đủ thông tin" });
+      toast.error("Vui lòng điền đầy đủ thông tin");
       return;
     }
 
     if (newPassword.length < 6) {
-      setMessage({ type: "error", text: "Mật khẩu mới phải có ít nhất 6 ký tự" });
+      toast.error("Mật khẩu mới phải có ít nhất 6 ký tự");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setMessage({ type: "error", text: "Mật khẩu xác nhận không khớp" });
+      toast.error("Mật khẩu xác nhận không khớp");
       return;
     }
 
     if (currentPassword === newPassword) {
-      setMessage({ type: "error", text: "Mật khẩu mới phải khác mật khẩu hiện tại" });
+      toast.error("Mật khẩu mới phải khác mật khẩu hiện tại");
       return;
     }
 
@@ -44,12 +45,12 @@ export default function UserChangePassword() {
     });
 
     if (success) {
-      setMessage({ type: "success", text: "Đổi mật khẩu thành công!" });
+      toast.success("Đổi mật khẩu thành công!");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } else {
-      setMessage({ type: "error", text: error || "Đổi mật khẩu thất bại" });
+      toast.error(error || "Đổi mật khẩu thất bại");
     }
   };
 

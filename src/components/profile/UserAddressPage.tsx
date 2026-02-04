@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAddress } from "@/hooks/useAddress";
 import type { Address } from "@/services/AddressService/addressTypes";
+import { toast } from "react-toastify";
 
 export default function UserAddressPage() {
   const {
@@ -64,7 +65,7 @@ export default function UserAddressPage() {
       !district.trim() ||
       !address.trim()
     ) {
-      alert("Vui lòng điền đầy đủ thông tin bắt buộc");
+      toast.error("Vui lòng điền đầy đủ thông tin bắt buộc");
       return;
     }
 
@@ -82,8 +83,10 @@ export default function UserAddressPage() {
 
     if (editingId) {
       success = await onUpdateAddress(editingId, payload);
+      if (success) toast.success("Cập nhật địa chỉ thành công");
     } else {
       success = await onAddAddress(payload);
+      if (success) toast.success("Thêm địa chỉ thành công");
     }
 
     if (success) handleCloseForm();
@@ -91,7 +94,8 @@ export default function UserAddressPage() {
 
   const handleDelete = async (id: string) => {
     if (confirm("Bạn có chắc muốn xóa địa chỉ này?")) {
-      await onDeleteAddress(id);
+      const success = await onDeleteAddress(id);
+      if (success) toast.success("Đã xóa địa chỉ");
     }
   };
 
