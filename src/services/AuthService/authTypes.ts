@@ -43,6 +43,7 @@ export interface LoginResponseData {
   _id: string;
   full_name: string;
   email: string;
+  avatar?: string;
   isRole: string;
   access_token: string;
   refresh_token: string;
