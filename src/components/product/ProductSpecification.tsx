@@ -49,10 +49,7 @@ export default function ProductSpecificationSection({
 /* ===== Helpers ===== */
 
 const formatSpecKey = (key: string) => {
-  return key
-    .replace(/_/g, " ")
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+  return key.replace(/_/g, " ");
 };
 
 const renderSpecValue = (value: unknown) => {
