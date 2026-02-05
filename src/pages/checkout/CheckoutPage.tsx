@@ -5,6 +5,7 @@ import { useAddress } from "@/hooks/useAddress";
 import { useCart } from "@/hooks/useCart";
 import type { Address } from "@/services/AddressService/addressTypes";
 import type { PaymentMethod } from "@/services/CheckoutService/checkoutTypes";
+import CouponSummary from "@/components/coupon/CouponSummary";
 // import { toast } from "react-toastify";
 
 export default function CheckoutPage() {
@@ -68,7 +69,8 @@ export default function CheckoutPage() {
       ? SHIPPING_FEE
       : 0;
 
-  const total = totalAmount + shippingFee;
+  const discountAmount = cart?.discount_amount || 0;
+  const total = totalAmount + shippingFee - discountAmount;
 
 
   const handlePlaceOrder = async () => {
@@ -270,6 +272,20 @@ export default function CheckoutPage() {
                   <span className="text-gray-600">Phí vận chuyển</span>
                   <span className="font-medium">{shippingFee.toLocaleString("vi-VN")}đ</span>
                 </div>
+
+                {/* Coupon Summary */}
+                {cart?.applied_coupon && (
+                  <>
+                    <CouponSummary />
+                    <div className="flex justify-between text-red-600">
+                      <span>Giảm giá</span>
+                      <span className="font-medium">
+                        -{discountAmount.toLocaleString("vi-VN")}đ
+                      </span>
+                    </div>
+                  </>
+                )}
+
                 <div className="border-t pt-3 flex justify-between">
                   <span className="font-semibold">Tổng cộng</span>
                   <span className="font-semibold text-blue-600 text-lg">

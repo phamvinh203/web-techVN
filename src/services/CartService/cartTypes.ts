@@ -26,6 +26,14 @@ export interface CartData {
   items: CartItem[];
   total_items: number;
   total_amount: number;
+  discount_amount?: number;
+  applied_coupon?: {
+    coupon_id: string;
+    code: string;
+    type: 'PERCENT' | 'FIXED' | 'FREESHIP';
+    value: number;
+    discount_amount: number;
+  };
 }
 
 /* ===== API RESPONSES ===== */

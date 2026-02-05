@@ -4,6 +4,8 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks/useCart';
+import CouponInput from '@/components/coupon/CouponInput';
+import CouponSummary from '@/components/coupon/CouponSummary';
 
 export default function CartPage() {
   const navigate = useNavigate();
@@ -226,35 +228,61 @@ export default function CartPage() {
               ))}
             </div>
 
+            {/*  COUPON SECTION  */}
+            <div className="mt-6">
+              <CouponInput />
+            </div>
+
             {/*  FOOTER  */}
-            <div className="bg-white rounded-lg shadow-sm mt-6 px-4 py-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={selectedIds.length === validItems.length && validItems.length > 0}
-                  onChange={(e) => handleSelectAll(e.target.checked)}
-                />
-                <span>Chọn tất cả</span>
+            <div className="bg-white rounded-lg shadow-sm mt-6 px-4 py-4">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.length === validItems.length && validItems.length > 0}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                  />
+                  <span>Chọn tất cả</span>
+                </div>
+
+                <div className="flex items-center gap-6">
+                  <p className="text-lg">
+                    Tổng tiền ({selectedIds.length} sản phẩm):
+                    <span className="text-red-600 font-bold ml-2">
+                      {formatPrice(totalSelectedAmount)}
+                    </span>
+                  </p>
+                </div>
               </div>
 
-              <div className="flex items-center gap-6">
-                <p className="text-lg">
-                  Tổng cộng ({selectedIds.length} sản phẩm):
-                  <span className="text-red-600 font-bold ml-2">
-                    {formatPrice(totalSelectedAmount)}
-                  </span>
-                </p>
-                <Button
-                  onClick={handleCheckout}
-                  disabled={selectedIds.length === 0}
-                  className={`px-8 ${
-                    selectedIds.length === 0
-                      ? 'bg-gray-300 cursor-not-allowed'
-                      : 'bg-red-600 hover:bg-red-700 text-white'
-                  }`}
-                >
-                  Mua hàng
-                </Button>
+              {/* Coupon Summary */}
+              <div className="border-t pt-4 mb-4">
+                <CouponSummary />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div></div>
+                <div className="flex items-center gap-6">
+                  <p className="text-xl">
+                    Tổng thanh toán:
+                    <span className="text-red-600 font-bold ml-2 text-2xl">
+                      {formatPrice(
+                        totalSelectedAmount - (cart?.discount_amount || 0)
+                      )}
+                    </span>
+                  </p>
+                  <Button
+                    onClick={handleCheckout}
+                    disabled={selectedIds.length === 0}
+                    className={`px-8 ${
+                      selectedIds.length === 0
+                        ? 'bg-gray-300 cursor-not-allowed'
+                        : 'bg-red-600 hover:bg-red-700 text-white'
+                    }`}
+                  >
+                    Mua hàng
+                  </Button>
+                </div>
               </div>
             </div>
           </>

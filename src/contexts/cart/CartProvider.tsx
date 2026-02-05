@@ -7,7 +7,9 @@ import {
   getCart as getCartAPI,
   removeFromCart,
   updateCartItem,
-  clearCart as clearCartAPI
+  clearCart as clearCartAPI,
+  applyCoupon as applyCouponAPI,
+  removeCoupon as removeCouponAPI
 } from '@/services/CartService/cartService';
 import { useAuth } from '../AuthContext';
 import { toast } from 'react-toastify';
@@ -143,6 +145,38 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const applyCoupon = async (code: string) => {
+    try {
+      setLoading(true);
+      const response = await applyCouponAPI(code);
+      setCart(response.data);
+      toast.success('Áp dụng mã giảm giá thành công');
+    } catch (error: any) {
+      console.error('Error applying coupon:', error);
+      const errorMessage = error?.response?.data?.message || 'Không thể áp dụng mã giảm giá';
+      toast.error(errorMessage);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removeCoupon = async () => {
+    try {
+      setLoading(true);
+      const response = await removeCouponAPI();
+      setCart(response.data);
+      toast.success('Đã xóa mã giảm giá');
+    } catch (error: any) {
+      console.error('Error removing coupon:', error);
+      const errorMessage = error?.response?.data?.message || 'Không thể xóa mã giảm giá';
+      toast.error(errorMessage);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   useEffect(() => {
   if (isAuthenticated) {
@@ -165,6 +199,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         clearCart,
         setCart,
         itemCount,
+        applyCoupon,
+        removeCoupon,
       }}
     >
       {children}
